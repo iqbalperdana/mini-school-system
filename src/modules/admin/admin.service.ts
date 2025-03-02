@@ -64,4 +64,33 @@ export class AdminService {
       console.log(error);
     }
   }
+
+  async getCommonStudents(teacherEmails: string[]) {
+    try {
+      const allStudentEmails =
+        await this.teacherStudentRepository.findAllStudentsEmailByTeacherEmails(
+          teacherEmails,
+        );
+
+      // Find common students among teachers
+      // Count number of emails occured in the result
+
+      const emailCounts = new Map<string, number>();
+      for (const entry of allStudentEmails) {
+        const studentEmail = entry.email;
+        const count = emailCounts.get(studentEmail) || 0;
+        emailCounts.set(studentEmail, count + 1);
+      }
+
+      const commonStudents = ;
+      for (const [email, count] of emailCounts) {
+        if (count === teacherEmails.length) {
+          commonStudents.push(email);
+        }
+      }
+      return commonStudents;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

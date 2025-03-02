@@ -31,4 +31,13 @@ export class TeacherStudentRepository extends Repository<TeacherStudent> {
       .orIgnore()
       .execute();
   }
+
+  async findAllStudentsEmailByTeacherEmails(teacherEmails: string[]) {
+    const query = this.createQueryBuilder('teacher_student')
+      .select('student.email as email')
+      .innerJoin('teacher_student.student', 'student')
+      .innerJoin('teacher_student.teacher', 'teacher')
+      .where('teacher.email IN (:...teacherEmails)', { teacherEmails });
+    return query.getRawMany();
+  }
 }
