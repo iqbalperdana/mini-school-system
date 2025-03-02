@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, HttpCode } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { RegisterTeacherStudentDto } from './dto/register-teacher-student.dto';
 
@@ -7,6 +7,7 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Post('register')
+  @HttpCode(204)
   registerTeacherStudent(
     @Body() registerTeacherStudentDto: RegisterTeacherStudentDto,
   ) {
