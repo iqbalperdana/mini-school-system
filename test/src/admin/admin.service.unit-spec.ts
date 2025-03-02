@@ -22,6 +22,7 @@ describe('AdminService', () => {
         {
           provide: TeacherRepository,
           useValue: {
+            find: jest.fn(),
             findOne: jest.fn(),
             save: jest.fn(),
           },
@@ -219,6 +220,16 @@ describe('AdminService', () => {
           'findCommonStudentsEmailByTeacherEmails',
         )
         .mockResolvedValue(mockStudents);
+      jest.spyOn(teacherRepositoryMock, 'find').mockResolvedValue([
+        {
+          id: 1,
+          email: 'teacher1@example.com',
+        },
+        {
+          id: 2,
+          email: 'teacher2@example.com',
+        },
+      ]);
 
       const result = await service.getCommonStudents(teacherEmails);
 
@@ -234,8 +245,40 @@ describe('AdminService', () => {
           'findCommonStudentsEmailByTeacherEmails',
         )
         .mockResolvedValue(mockStudents);
+      jest.spyOn(teacherRepositoryMock, 'find').mockResolvedValue([
+        {
+          id: 1,
+          email: 'teacher1@example.com',
+        },
+        {
+          id: 2,
+          email: 'teacher2@example.com',
+        },
+      ]);
       const result = await service.getCommonStudents(teacherEmails);
       expect(result).toEqual([]);
+    });
+
+    it('should only query with valid teacher emails', async () => {
+      const teacherEmails = ['teacher1@example.com', 'teacher2@example.com'];
+      const mockStudents = [{ email: 'student@example.com' }];
+      jest
+        .spyOn(
+          teacherStudentRepositoryMock,
+          'findCommonStudentsEmailByTeacherEmails',
+        )
+        .mockResolvedValue(mockStudents);
+      jest.spyOn(teacherRepositoryMock, 'find').mockResolvedValue([
+        {
+          id: 1,
+          email: 'teacher1@example.com',
+        },
+      ]);
+      const result = await service.getCommonStudents(teacherEmails);
+      expect(
+        teacherStudentRepositoryMock.findCommonStudentsEmailByTeacherEmails,
+      ).toHaveBeenCalledWith(['teacher1@example.com']);
+      expect(result).toEqual(['student@example.com']);
     });
 
     it('should throw exception when no teacher emails given', async () => {

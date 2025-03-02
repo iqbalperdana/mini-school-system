@@ -96,9 +96,14 @@ export class AdminService {
         throw new BadRequestException('Teacher emails is required');
       }
 
+      const validTeacherEmails = await this.teacherRepository.find({
+        select: { email: true },
+        where: { email: In(teacherEmails) },
+      });
+
       const commonStudents =
         await this.teacherStudentRepository.findCommonStudentsEmailByTeacherEmails(
-          teacherEmails,
+          validTeacherEmails.map((teacher) => teacher.email),
         );
       return commonStudents.flatMap((student) => student.email);
     } catch (error) {
