@@ -8,6 +8,10 @@ This is a simple school administration system build using NestJS. It provides en
 - npm v10 or higher
 - MySQL 8.4 or higher
 
+or
+
+- Docker
+
 ## Installation
 
 1. Clone the repository
@@ -33,6 +37,12 @@ npm run db:migrate:up
 
 ```bash
 npm run start
+```
+
+or with docker
+
+```bash
+docker-compose up --build
 ```
 
 ## API Documentation
