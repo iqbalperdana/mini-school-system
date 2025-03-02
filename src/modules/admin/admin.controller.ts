@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { RegisterTeacherStudentDto } from './dto/register-teacher-student.dto';
-import { ParseQueryArrayPipe } from 'src/common/pipes/parse-query-array.pipe';
+import { ParseQueryArrayPipe } from '../../common/pipes/parse-query-array.pipe';
 import { StudentDto } from './dto/student.dto';
 import { NotificationDto } from './dto/notification.dto';
 

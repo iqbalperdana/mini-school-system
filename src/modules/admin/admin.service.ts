@@ -5,9 +5,9 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { RegisterTeacherStudentDto } from './dto/register-teacher-student.dto';
-import { TeacherRepository } from './repositories/teacher.repository';
-import { StudentRepository } from './repositories/student.repository';
-import { TeacherStudentRepository } from './repositories/teacher-student.repository';
+import { TeacherRepository } from '../../common/repositories/teacher.repository';
+import { StudentRepository } from '../../common/repositories/student.repository';
+import { TeacherStudentRepository } from '../../common/repositories/teacher-student.repository';
 import { In } from 'typeorm';
 import { StudentStatus } from '../../common/entities/student.entity';
 import { EntityNotFoundException } from '../../common/exceptions/entity-not-found.exception';

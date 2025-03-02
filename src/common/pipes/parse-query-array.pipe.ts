@@ -1,4 +1,5 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
+import { isEmail } from 'class-validator';
 
 @Injectable()
 export class ParseQueryArrayPipe implements PipeTransform {
@@ -7,14 +8,25 @@ export class ParseQueryArrayPipe implements PipeTransform {
   transform(value: any) {
     const paramValue = value;
 
+    let emails: string[];
     if (Array.isArray(paramValue)) {
-      return paramValue;
+      emails = paramValue;
     } else if (typeof paramValue === 'string') {
-      return [paramValue];
+      emails = [paramValue];
     } else if (paramValue === undefined) {
-      return [];
+      emails = [];
+    } else {
+      throw new BadRequestException(
+        `Invalid query parameter: ${this.paramName}`,
+      );
     }
 
-    throw new BadRequestException(`Invalid query parameter: ${this.paramName}`);
+    for (const email of emails) {
+      if (!isEmail(email)) {
+        throw new BadRequestException(`Invalid email: ${email}`);
+      }
+    }
+
+    return emails;
   }
 }

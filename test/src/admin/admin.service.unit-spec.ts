@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AdminService } from '../../../src/modules/admin/admin.service';
-import { TeacherRepository } from '../../../src/modules/admin/repositories/teacher.repository';
-import { StudentRepository } from '../../../src/modules/admin/repositories/student.repository';
-import { TeacherStudentRepository } from '../../../src/modules/admin/repositories/teacher-student.repository';
+import { TeacherRepository } from '../../../src/common/repositories/teacher.repository';
+import { StudentRepository } from '../../../src/common/repositories/student.repository';
+import { TeacherStudentRepository } from '../../../src/common/repositories/teacher-student.repository';
 import { Student } from '../../../src/common/entities/student.entity';
 import { Teacher } from '../../../src/common/entities/teacher.entity';
 import { NotificationDto } from '../../../src/modules/admin/dto/notification.dto';
