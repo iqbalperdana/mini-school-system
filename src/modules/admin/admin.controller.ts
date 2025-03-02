@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Get, Query, HttpCode } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Query,
+  HttpCode,
+  BadRequestException,
+} from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { RegisterTeacherStudentDto } from './dto/register-teacher-student.dto';
 import { ParseQueryArrayPipe } from 'src/common/pipes/parse-query-array.pipe';
@@ -19,6 +27,10 @@ export class AdminController {
   getCommonStudents(
     @Query('teacher', new ParseQueryArrayPipe('teacher')) teachers: string[],
   ) {
+    if (!teachers.length) {
+      throw new BadRequestException("teacher's email is required");
+    }
+
     return this.adminService.getCommonStudents(teachers);
   }
 }

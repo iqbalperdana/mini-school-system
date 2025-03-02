@@ -32,12 +32,16 @@ export class TeacherStudentRepository extends Repository<TeacherStudent> {
       .execute();
   }
 
-  async findAllStudentsEmailByTeacherEmails(teacherEmails: string[]) {
+  async findCommonStudentsEmailByTeacherEmails(teacherEmails: string[]) {
     const query = this.createQueryBuilder('teacher_student')
       .select('student.email as email')
       .innerJoin('teacher_student.student', 'student')
       .innerJoin('teacher_student.teacher', 'teacher')
-      .where('teacher.email IN (:...teacherEmails)', { teacherEmails });
+      .where('teacher.email IN (:...teacherEmails)', { teacherEmails })
+      .groupBy('student.email')
+      .having('COUNT(DISTINCT teacher.email) = :teacherEmailsLength', {
+        teacherEmailsLength: teacherEmails.length,
+      });
     return query.getRawMany();
   }
 }
