@@ -4,6 +4,7 @@ import { TeacherRepository } from './repositories/teacher.repository';
 import { StudentRepository } from './repositories/student.repository';
 import { TeacherStudentRepository } from './repositories/teacher-student.repository';
 import { In } from 'typeorm';
+import { StudentStatus } from 'src/common/entities/student.entity';
 
 @Injectable()
 export class AdminService {
@@ -72,6 +73,20 @@ export class AdminService {
           teacherEmails,
         );
       return commonStudents.flatMap((student) => student.email);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async suspendStudent(studentEmail: string) {
+    try {
+      const student = await this.studentRepository.findOneBy({
+        email: studentEmail,
+      });
+      if (student) {
+        student.status = 'suspend' as StudentStatus;
+        await this.studentRepository.save(student);
+      }
     } catch (error) {
       console.log(error);
     }

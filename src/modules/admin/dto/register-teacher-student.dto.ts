@@ -14,5 +14,6 @@ export class RegisterTeacherStudentDto {
   teacher: string;
 
   @IsArray()
+  @IsEmail({}, { each: true })
   students: string[];
 }

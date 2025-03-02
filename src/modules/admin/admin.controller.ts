@@ -10,6 +10,7 @@ import {
 import { AdminService } from './admin.service';
 import { RegisterTeacherStudentDto } from './dto/register-teacher-student.dto';
 import { ParseQueryArrayPipe } from 'src/common/pipes/parse-query-array.pipe';
+import { StudentDto } from './dto/student.dto';
 
 @Controller('api')
 export class AdminController {
@@ -32,5 +33,11 @@ export class AdminController {
     }
 
     return this.adminService.getCommonStudents(teachers);
+  }
+
+  @Post('suspend')
+  @HttpCode(204)
+  suspendStudent(@Body() stundentDto: StudentDto) {
+    return this.adminService.suspendStudent(stundentDto.student);
   }
 }
