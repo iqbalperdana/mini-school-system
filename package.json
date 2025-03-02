@@ -1,8 +1,8 @@
 {
-  "name": "0.test-inphosoft",
+  "name": "school-management-system",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Simple school management system for teacher and student relationship",
+  "author": "Muhammad Iqbal Perdana",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
