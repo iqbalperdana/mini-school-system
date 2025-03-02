@@ -11,6 +11,7 @@ import { AdminService } from './admin.service';
 import { RegisterTeacherStudentDto } from './dto/register-teacher-student.dto';
 import { ParseQueryArrayPipe } from 'src/common/pipes/parse-query-array.pipe';
 import { StudentDto } from './dto/student.dto';
+import { NotificationDto } from './dto/notification.dto';
 
 @Controller('api')
 export class AdminController {
@@ -39,5 +40,11 @@ export class AdminController {
   @HttpCode(204)
   suspendStudent(@Body() stundentDto: StudentDto) {
     return this.adminService.suspendStudent(stundentDto.student);
+  }
+
+  @Post('retrievefornotifications')
+  @HttpCode(200)
+  retrieveForNotifications(@Body() notificationDto: NotificationDto) {
+    return this.adminService.retrieveForNotifications(notificationDto);
   }
 }

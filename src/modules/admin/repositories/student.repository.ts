@@ -15,4 +15,12 @@ export class StudentRepository extends Repository<Student> {
       where: { email: In(emails) },
     });
   }
+
+  async findAllActiveStudentsByEmails(emails: string[]) {
+    return await this.createQueryBuilder('student')
+      .select('student.email as email')
+      .where('student.email IN (:...emails)', { emails })
+      .andWhere('student.status = :status', { status: 'active' })
+      .getRawMany();
+  }
 }

@@ -11,6 +11,7 @@ import { TeacherStudentRepository } from './repositories/teacher-student.reposit
 import { In } from 'typeorm';
 import { StudentStatus } from '../../common/entities/student.entity';
 import { EntityNotFoundException } from '../../common/exceptions/entity-not-found.exception';
+import { NotificationDto } from './dto/notification.dto';
 
 @Injectable()
 export class AdminService {
@@ -124,5 +125,58 @@ export class AdminService {
         ? new InternalServerErrorException()
         : new HttpException(error.message, error.status);
     }
+  }
+
+  async retrieveForNotifications(notificationDto: NotificationDto) {
+    try {
+      const teacher = await this.teacherRepository.findOne({
+        where: { email: notificationDto.teacher },
+        relations: {
+          teacherStudents: {
+            student: true,
+          },
+        },
+      });
+
+      if (!teacher) {
+        throw new EntityNotFoundException(
+          `Teacher ${notificationDto.teacher} not found`,
+        );
+      }
+
+      const studentsEmails = [];
+      for (const teacherStudent of teacher.teacherStudents) {
+        if (teacherStudent.student.status == 'active') {
+          studentsEmails.push(teacherStudent.student.email);
+        }
+      }
+
+      const emailsFromNotification = this.getEmailsFromNotification(
+        notificationDto.notification,
+      );
+
+      const allEmails = [...studentsEmails, ...emailsFromNotification];
+      if (allEmails.length == 0) {
+        return [];
+      }
+      const studentsEmailsToNotify =
+        await this.studentRepository.findAllActiveStudentsByEmails(allEmails);
+
+      return studentsEmailsToNotify.map((student) => student.email);
+    } catch (error) {
+      throw error.status == undefined
+        ? new InternalServerErrorException()
+        : new HttpException(error.message, error.status);
+    }
+  }
+
+  getEmailsFromNotification(notification: string) {
+    const emailRegex = /@([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g;
+    const emails = notification.match(emailRegex);
+    if (emails) {
+      // Remove prefix @ to mention email
+      return emails.map((email) => email.slice(1));
+    }
+    return [];
   }
 }
