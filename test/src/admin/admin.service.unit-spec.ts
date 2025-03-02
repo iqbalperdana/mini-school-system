@@ -291,6 +291,20 @@ describe('AdminService', () => {
         expect(error.status).toBe(HttpStatus.BAD_REQUEST);
       }
     });
+
+    it('should throw exception when no teacher found', async () => {
+      const teacherEmails = ['teacher1@example.com', 'teacher2@example.com'];
+      jest.spyOn(teacherRepositoryMock, 'find').mockResolvedValue([]);
+      try {
+        await service.getCommonStudents(teacherEmails);
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpException);
+        expect(error.message).toBe(
+          'Invalid teacher emails, please check again',
+        );
+        expect(error.status).toBe(HttpStatus.NOT_FOUND);
+      }
+    });
   });
 
   describe('suspendStudent', () => {

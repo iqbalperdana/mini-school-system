@@ -101,6 +101,12 @@ export class AdminService {
         where: { email: In(teacherEmails) },
       });
 
+      if (validTeacherEmails.length == 0) {
+        throw new EntityNotFoundException(
+          'Invalid teacher emails, please check again',
+        );
+      }
+
       const commonStudents =
         await this.teacherStudentRepository.findCommonStudentsEmailByTeacherEmails(
           validTeacherEmails.map((teacher) => teacher.email),
